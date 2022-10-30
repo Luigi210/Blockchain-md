@@ -11,28 +11,43 @@ import {
 } from "@chakra-ui/react"
 import { ColorModeSwitcher } from "./ColorModeSwitcher"
 import { Logo } from "./Logo"
+import { BrowserRouter, Routes, Route } from "react-router-dom"
+import Header from "./components/Header"
+import Footer from "./components/Footer"
+import Login from "./pages/Login"
+import Category from "./pages/Category"
+import { ChainId, ThirdwebProvider } from "@thirdweb-dev/react";
+import Books from "./pages/Books"
+import Basket from "./pages/Basket"
 
-export const App = () => (
-  <ChakraProvider theme={theme}>
-    <Box textAlign="center" fontSize="xl">
-      <Grid minH="100vh" p={3}>
-        <ColorModeSwitcher justifySelf="flex-end" />
-        <VStack spacing={8}>
-          <Logo h="40vmin" pointerEvents="none" />
-          <Text>
-            Edit <Code fontSize="xl">src/App.tsx</Code> and save to reload.
-          </Text>
-          <Link
-            color="teal.500"
-            href="https://chakra-ui.com"
-            fontSize="2xl"
-            target="_blank"
-            rel="noopener noreferrer"
-          >
-            Learn Chakra
-          </Link>
-        </VStack>
-      </Grid>
-    </Box>
+export const App = () => {
+  const supportedChainIds = [1, 4];
+  const connectors = {
+      injected: {},
+  };
+
+  return <ChakraProvider theme={theme}>
+      <ThirdwebProvider
+          // chainRpc={{
+          //     [ChainId.Rinkeby]:
+          //         "https://rinkeby.infura.io/v3/6ecb82aeefcc47fe86b238ecca88afba",
+          // }}
+          autoConnect
+          supportedChains={supportedChainIds}
+          desiredChainId={1}
+      >
+      <BrowserRouter>
+        <Header/>
+        <Box height={"90%"}>
+          <Routes>
+            <Route path='/login' element={<Login/>} />
+            <Route path='/category' element={<Category/>} />
+            <Route path='/basket' element={<Basket/>} />
+            <Route path='/search-books' element={<Books/>} />
+          </Routes>
+        </Box>
+        <Footer/>
+      </BrowserRouter>
+    </ThirdwebProvider>
   </ChakraProvider>
-)
+}
